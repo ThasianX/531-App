@@ -1,4 +1,4 @@
-package com.example.a531app.lifts;
+package com.example.a531app.utilities;
 
 import android.os.Parcel;
 import android.os.Parcelable;

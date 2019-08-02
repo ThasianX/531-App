@@ -1,8 +1,7 @@
-package com.example.a531app.cyclenavigation;
+package com.example.a531app.daysnavigation;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,8 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.a531app.R;
-import com.example.a531app.appnavigation.BaseFragment;
-import com.example.a531app.navigation.ViewPagerAdapter;
+import com.example.a531app.utilities.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.

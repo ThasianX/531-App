@@ -1,4 +1,4 @@
-package com.example.a531app.cycles;
+package com.example.a531app.cyclenavigation;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

@@ -1,4 +1,4 @@
-package com.example.a531app.navigation;
+package com.example.a531app.daysnavigation;
 
 
 import android.os.Bundle;
@@ -9,23 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.a531app.R;
-import com.example.a531app.cycles.DayAdapter;
-import com.example.a531app.lifts.Lift;
+import com.example.a531app.utilities.Lift;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DayFourFragment extends Fragment {
+public class DayThreeFragment extends Fragment {
 
 
     private RecyclerView recyclerView;
     private DayAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    public DayFourFragment() {
+    public DayThreeFragment() {
         // Required empty public constructor
     }
 
@@ -53,5 +51,4 @@ public class DayFourFragment extends Fragment {
         recyclerView.addItemDecoration(dividerItemDecoration);
         return view;
     }
-
 }

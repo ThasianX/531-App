@@ -1,4 +1,4 @@
-package com.example.a531app.cycles;
+package com.example.a531app.utilities;
 
 public class WeekPercentages {
 

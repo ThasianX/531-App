@@ -1,4 +1,4 @@
-package com.example.a531app.appnavigation;
+package com.example.a531app.utilities;
 
 
 import android.app.Activity;
@@ -8,9 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.example.a531app.R;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package com.example.a531app.cycles;
+package com.example.a531app.daysnavigation;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,8 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.a531app.R;
-import com.example.a531app.appnavigation.SettingsFragment;
-import com.example.a531app.lifts.Lift;
+import com.example.a531app.settingsnavigation.SettingsFragment;
+import com.example.a531app.utilities.Timer;
+import com.example.a531app.utilities.WeekPercentages;
+import com.example.a531app.utilities.Lift;
 
 import static android.content.Context.MODE_PRIVATE;
 

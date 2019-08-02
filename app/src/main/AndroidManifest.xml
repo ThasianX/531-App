@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="supportsRtl">
-        <activity android:name=".cycles.CycleManager"
+        <activity android:name=".cyclenavigation.CycleManager"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,30 +20,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SetupActivity"
-            android:parentActivityName=".cycles.CycleManager">
+        <activity android:name=".setup.SetupActivity"
+            android:parentActivityName=".cyclenavigation.CycleManager">
 
         </activity>
 
-        <activity android:name=".UpdateTrainingMax">
+        <activity android:name=".utilities.UpdateTrainingMax">
 
         </activity>
 
-        <activity android:name=".cycles.Weeks"
-            android:parentActivityName=".cycles.CycleManager">
-
-        </activity>
-
-        <activity android:name=".cycles.WeekCycle"
-            android:launchMode="singleTop"
-            android:parentActivityName=".cycles.Weeks">
-
-        </activity>
-
-        <activity android:name=".cycles.Timer"
-            android:parentActivityName=".cycles.WeekCycle"/>
-
-
+        <activity android:name=".utilities.Timer"
+            android:parentActivityName=".daysnavigation.WeekCycle"/>
 
         <meta-data
             android:name="preloaded_fonts"

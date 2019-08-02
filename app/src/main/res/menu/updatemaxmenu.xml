@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.a531app.UpdateTrainingMax">
+    tools:context="com.example.a531app.utilities.UpdateTrainingMax">
 
     <item
         android:id="@+id/action_save"

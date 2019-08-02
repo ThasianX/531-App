@@ -1,4 +1,4 @@
-package com.example.a531app.cycles;
+package com.example.a531app.cyclenavigation;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,29 +10,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.a531app.R;
-import com.example.a531app.SetupActivity;
-import com.example.a531app.appnavigation.BaseFragment;
-import com.example.a531app.appnavigation.CycleManagerFragment;
-import com.example.a531app.appnavigation.ProgressFragment;
-import com.example.a531app.appnavigation.SettingsFragment;
-import com.example.a531app.cyclenavigation.CurrentCycleFragment;
-import com.example.a531app.cyclenavigation.WeeksDisplayFragment;
-import com.example.a531app.lifts.Lift;
+import com.example.a531app.utilities.BaseFragment;
+import com.example.a531app.progressnavigation.ProgressFragment;
+import com.example.a531app.settingsnavigation.SettingsFragment;
+import com.example.a531app.utilities.Program;
+import com.example.a531app.setup.SetupActivity;
+import com.example.a531app.utilities.Lift;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class CycleManager extends AppCompatActivity implements BaseFragment.OnFragmentInteractionListener{
+public class CycleManager extends AppCompatActivity implements BaseFragment.OnFragmentInteractionListener {
 
     private static List<Lift> lifts = new ArrayList<Lift>();
     private int RC_SETUP = 23232;

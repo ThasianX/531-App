@@ -1,4 +1,4 @@
-package com.example.a531app.navigation;
+package com.example.a531app.daysnavigation;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,12 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 
-import com.example.a531app.cycles.CycleManager;
-import com.example.a531app.cycles.DayAdapter;
-import com.example.a531app.cycles.Program;
-import com.example.a531app.lifts.Lift;
+import com.example.a531app.cyclenavigation.CycleManager;
+import com.example.a531app.utilities.Program;
+import com.example.a531app.utilities.Lift;
 
 import java.util.List;
 

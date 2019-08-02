@@ -1,7 +1,6 @@
-package com.example.a531app.lifts;
+package com.example.a531app.settingsnavigation;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.a531app.R;
-import com.example.a531app.UpdateTrainingMax;
+import com.example.a531app.utilities.Lift;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.SelectableViewHolder>{

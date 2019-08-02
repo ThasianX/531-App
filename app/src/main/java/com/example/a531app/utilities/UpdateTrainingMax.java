@@ -1,13 +1,11 @@
-package com.example.a531app;
+package com.example.a531app.utilities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.a531app.lifts.Lift;
+import com.example.a531app.R;
 
-import static com.example.a531app.SetupActivity.EDIT_MAX_KEY;
+import static com.example.a531app.setup.SetupActivity.EDIT_MAX_KEY;
 
 public class UpdateTrainingMax extends AppCompatActivity {
 

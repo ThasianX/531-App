@@ -1,7 +1,6 @@
 package com.example.a531app.cyclenavigation;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,15 +16,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.a531app.R;
-import com.example.a531app.appnavigation.BaseFragment;
-import com.example.a531app.cycles.CycleManager;
-import com.example.a531app.cycles.WeekCycle;
-import com.example.a531app.cycles.WeeksAdapter;
-import com.example.a531app.lifts.Lift;
+import com.example.a531app.utilities.BaseFragment;
+import com.example.a531app.daysnavigation.WeekCycleFragment;
+import com.example.a531app.utilities.Lift;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.

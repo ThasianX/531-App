@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/lift_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="Overhead press" />
+
+        <EditText
+            android:id="@+id/et_max"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:gravity="center"
+            android:hint="0 lb"
+            android:maxLines="1"
+            android:inputType="number"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:text="@string/manual_instructions"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/calculator_label"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/reps_input"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_weight="1"
+            android:hint="@string/reps_hint"
+            android:maxLines="1"
+            android:inputType="number"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/weight_input"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_weight="3"
+            android:hint="@string/weight_hint"
+            android:maxLines="1"
+            android:inputType="number"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_new_max"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:text="0 lb"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_update"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:text="@string/update_label"
+        android:layout_gravity="center"
+        android:onClick="updateLift"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/calculator_instructions"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+
+
+
+
+</LinearLayout>

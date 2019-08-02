@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/my_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
+        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="32dp">
+
+            <LinearLayout style="@style/SetupLinearLayoutStyle">
+
+                <TextView
+                    style="@style/SetupTextStyle"
+                    android:text="@string/program_label" />
+
+                <ImageButton
+                    android:id="@+id/program_info_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@mipmap/ic_infos" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/program_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/program_array"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"/>
+
+
+
+            <TextView
+                style="@style/SetupTextStyle"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:text="@string/round_to_label" />
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/round_to_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"/>
+
+
+            <LinearLayout style="@style/SetupLinearLayoutStyle">
+
+                <TextView
+                    style="@style/SetupTextStyle"
+                    android:text="@string/training_max_label" />
+
+                <ImageButton
+                    android:id="@+id/maxes_info_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@mipmap/ic_info" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_maxes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                >
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout style="@style/SetupLinearLayoutStyle">
+
+                <TextView
+                    style="@style/SetupTextStyle"
+                    android:text="@string/weight_progression_label" />
+
+                <ImageButton
+                    android:id="@+id/progression_info_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@mipmap/ic_info" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ProgressionLinearLayoutStyle">
+
+                <TextView
+                    style="@style/ProgressionTextStyle"
+                    android:text="@string/overhead_label"/>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    style="@style/ProgressionSpinnerStyle"
+                    android:id="@+id/overhead_spinner">
+
+                </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ProgressionLinearLayoutStyle">
+
+                <TextView
+                    style="@style/ProgressionTextStyle"
+                    android:text="@string/deadlift_label"/>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    style="@style/ProgressionSpinnerStyle"
+                    android:id="@+id/deadlift_spinner">
+
+                </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ProgressionLinearLayoutStyle">
+
+                <TextView
+                    style="@style/ProgressionTextStyle"
+                    android:text="@string/bench_label"/>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    style="@style/ProgressionSpinnerStyle"
+                    android:id="@+id/bench_spinner">
+
+                </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ProgressionLinearLayoutStyle">
+
+                <TextView
+                    style="@style/ProgressionTextStyle"
+                    android:text="@string/squat_label"/>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    style="@style/ProgressionSpinnerStyle"
+                    android:id="@+id/squat_spinner">
+
+                </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

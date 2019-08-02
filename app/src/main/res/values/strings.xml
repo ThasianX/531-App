@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">5/3/1 App</string>
+    <string name="action_done">Done</string>
+    <string name="action_save">Save</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_add">Add cycle</string>
+    <string name="action_reset">Reset</string>
+
+    <string name="program_label">Program</string>
+    <string name="round_to_label">Round to the nearest</string>
+    <string name="weight_progression_label">Weight Progression</string>
+    <string name="training_max_label">Current Training Maxes</string>
+
+    <string name="calculator_label">Wendler\'s Training Max Calculator</string>
+    <string name="update_label">Update</string>
+    <string name="manual_instructions">If you already know your current training max, then you can manually input it into the field above.</string>
+    <string name="reps_hint">Reps</string>
+    <string name="weight_hint">80-85% of max weight</string>
+    <string name="calculator_instructions">Formula: Weight x Reps x .0333 + Weight = Estimated 1 RM.\nThis formula helps calculate you calculate a safe training max
+                                            without loading the bar for a maximal attempt. Simply take 80-85% of your approximate maximum weight and count the number
+                                            of reps you can do with this weight.</string>
+    <string name="overhead_label">Overhead press</string>
+    <string name="deadlift_label">Deadlift</string>
+    <string name="bench_label">Bench Press</string>
+    <string name="squat_label">Squat</string>
+    <string name="progression_hint">Recommended 5 lb</string>
+
+    <string name="minus_seconds">- 15 sec</string>
+    <string name="plus_seconds">+ 15 sec</string>
+    <string name="skip_timer">Skip Timer</string>
+    <string name="timer_label">Rest Timer</string>
+
+    <string name="manage_cycles">Manage Cycle</string>
+    <string name="progess_bar">Progress</string>
+    <string name="training_settings">Settings</string>
+
+    <string name="timer_core_label">Show timer after completed core set</string>
+    <string name="timer_secondary_label">Show timer after completed secondary set</string>
+    <string name="timer_assistance_label">Show timer after completed assistance set</string>
+
+    <string name="complete_cycle_btn">Complete current cycle</string>
+
+
+    <string-array name="program_array">
+        <item>Boring But Big Variation 1</item>
+        <item>Boring But Big Variation 2</item>
+    </string-array>
+
+    <string-array name="round_to_array">
+        <item>1.25 lb</item>
+        <item>2.5 lb</item>
+        <item>5.0 lb</item>
+    </string-array>
+
+    <string-array name="progression_array">
+        <item>2.5 lb</item>
+        <item>5.0 lb</item>
+        <item>10.0 lb</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/setup"
+            />
+
+        <TextView
+            style="@style/SetupTextStyle"
+            android:layout_marginLeft="16dp"
+            android:text="@string/timer_label" />
+
+        <LinearLayout
+            style="@style/ProgressionLinearLayoutStyle">
+
+            <TextView
+                style="@style/ProgressionTextStyle"
+                android:text="@string/timer_core_label"/>
+
+            <CheckBox
+                android:id="@+id/cb_core"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ProgressionLinearLayoutStyle">
+
+            <TextView
+                style="@style/ProgressionTextStyle"
+                android:text="@string/timer_secondary_label"/>
+
+            <CheckBox
+                android:id="@+id/cb_secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ProgressionLinearLayoutStyle">
+
+            <TextView
+                style="@style/ProgressionTextStyle"
+                android:text="@string/timer_assistance_label"/>
+
+            <CheckBox
+                android:id="@+id/cb_assistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</ScrollView>

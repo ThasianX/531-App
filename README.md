@@ -10,3 +10,8 @@ Core functionalities include:<br>
 •Customization for round weight to the nearest 1.25, 2.5, or 5 lb<br>
 •Cycle completion indicator
 
+To use with Google firebase - Crashlytics:<br>
+Create a google firebase account with a new project. Follow instructions afterwards and update the google-services.json file in app.<br>
+
+To use without firebase:<br>
+Delete firebase implementations in gradle and the google json file.

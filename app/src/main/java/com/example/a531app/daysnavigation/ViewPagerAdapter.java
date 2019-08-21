@@ -1,5 +1,6 @@
 package com.example.a531app.daysnavigation;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.a531app.architecture.LiftListViewModel;
+import com.example.a531app.architecture.LiftModel;
 import com.example.a531app.cyclenavigation.CycleManager;
 import com.example.a531app.utilities.Program;
 import com.example.a531app.utilities.Lift;
@@ -16,7 +19,7 @@ import java.util.List;
 public class ViewPagerAdapter extends FragmentPagerAdapter{
 
     private Context mContext;
-    private List<Lift> mLifts;
+    private List<LiftModel> mLifts;
     private int week;
     private Program program;
     private String[] programDays;
@@ -24,11 +27,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     private String[] secondaryExercises;
 
 
-    public ViewPagerAdapter(FragmentManager fm, Context context, int week) {
+    public ViewPagerAdapter(FragmentManager fm, Context context, int week, List<LiftModel> lifts) {
         super(fm);
         mContext = context;
         this.week = week;
-        mLifts = CycleManager.getLifts();
+        mLifts = lifts;
         program = CycleManager.getProgram();
         programDays = program.getProgramDays();
         coreExercises = program.getCoreExercises();
@@ -39,37 +42,37 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         if (position == 0) {
             String exercise = coreExercises[0];
-            for(Lift lift: mLifts){
+            for(LiftModel lift: mLifts){
                 if(lift.getName().equals(exercise)){
                     DayOneFragment fragment = new DayOneFragment();
-                    fragment.setArguments(returnBundle(lift, secondaryExercises[0]));
+                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[0]));
                     return fragment;
                 }
             }
         } else if (position == 1) {
             String exercise = coreExercises[1];
-            for(Lift lift: mLifts){
+            for(LiftModel lift: mLifts){
                 if(lift.getName().equals(exercise)){
                     DayTwoFragment fragment = new DayTwoFragment();
-                    fragment.setArguments(returnBundle(lift, secondaryExercises[1]));
+                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[1]));
                     return fragment;
                 }
             }
         } else if (position == 2) {
             String exercise = coreExercises[2];
-            for(Lift lift: mLifts){
+            for(LiftModel lift: mLifts){
                 if(lift.getName().equals(exercise)){
                     DayThreeFragment fragment = new DayThreeFragment();
-                    fragment.setArguments(returnBundle(lift, secondaryExercises[2]));
+                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[2]));
                     return fragment;
                 }
             }
         } else {
             String exercise = coreExercises[3];
-            for (Lift lift : mLifts) {
+            for (LiftModel lift : mLifts) {
                 if (lift.getName().equals(exercise)) {
                     DayFourFragment fragment = new DayFourFragment();
-                    fragment.setArguments(returnBundle(lift, secondaryExercises[3]));
+                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[3]));
                     return fragment;
                 }
             }
@@ -77,10 +80,10 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
         return null;
     }
 
-    public Bundle returnBundle(Lift lift, String secondary){
+    public Bundle returnBundle(int id, String secondary){
         Bundle args = new Bundle();
-        args.putParcelable("lift", lift);
         args.putInt("week", week);
+        args.putInt("id", id);
         args.putString("secondary", secondary);
         return args;
     }

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.a531app.R;
@@ -14,7 +15,6 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeeksViewHol
 
     private final String[] weekLabels;
     private final Context mContext;
-
     private WeeksAdapterClickListener clickListener;
 
     public WeeksAdapter(Context context, WeeksAdapterClickListener listener){
@@ -52,10 +52,14 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeeksViewHol
     public class WeeksViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView weekLabel;
+        private ProgressBar progressBar;
+        private TextView progressStatus;
 
         public WeeksViewHolder(View view){
             super(view);
             weekLabel = view.findViewById(R.id.week_label);
+            progressBar = view.findViewById(R.id.progressBar);
+            progressStatus  = view.findViewById(R.id.tv_progress_status);
             view.setOnClickListener(this);
         }
 

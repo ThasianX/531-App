@@ -10,9 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.a531app.R;
+import com.example.a531app.architecture.AppDatabase;
+import com.example.a531app.architecture.LiftModel;
 import com.example.a531app.utilities.BaseFragment;
 import com.example.a531app.progressnavigation.ProgressFragment;
 import com.example.a531app.settingsnavigation.SettingsFragment;
@@ -31,22 +34,56 @@ public class CycleManager extends AppCompatActivity implements BaseFragment.OnFr
     private int RC_SETUP = 23232;
     public static String LIFT_LIST_KEY = "com.example.a531app.lifts.list";
     public static String PROGRAM_KEY = "com.example.a531app.program";
+    public static final String FIRST_LAUNCH_KEY = "com.example.a531app.firstlaunch";
+    public static final String SP_NAME = "prefs";
+    public static final String LOG_TAG = CycleManager.class.getSimpleName();
+
 
     private static Program program;
-    public static String cycleDate;
-    public static String todayDate;
+    private BottomNavigationView bottomNavigationView;
+
+    private AppDatabase mDb;
+
+    public static int overheadId;
+    public static int deadliftId;
+    public static int benchId;
+    public static int squatId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        managerSetup();
 
-        SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
-        boolean firstLaunch = sharedPreferences.getBoolean("firstLaunchs", true);
+        setContentView(R.layout.cycle_manager);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavBarsetup();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
+        boolean firstLaunch = sharedPreferences.getBoolean(FIRST_LAUNCH_KEY+"temporary to test", true);
+
         if(firstLaunch){
+            mDb = AppDatabase.getDatabase(getApplicationContext());
+//            long id = mDb.liftDao().addLift(new LiftModel("Overhead press", 5, 0, 5, 0, 1));
+//            overheadId = (int)id;
+//            Log.v(LOG_TAG, "overhead id "+overheadId);
+//            id = mDb.liftDao().addLift(new LiftModel( "Deadlift",  10, 0, 5, 0, 2));
+//            deadliftId = (int) id;
+//            Log.v(LOG_TAG, "deadlift id "+deadliftId);
+//            id =  mDb.liftDao().addLift(new LiftModel( "Bench press", 5, 0, 5, 0, 4));
+//            benchId = (int) id;
+//            Log.v(LOG_TAG, "bench id "+benchId);
+//            id = mDb.liftDao().addLift(new LiftModel( "Squat", 10, 0, 5, 0, 5));
+//            squatId = (int) id;
+//            Log.v(LOG_TAG, "squat id "+id);
+//
+//            Log.v(LOG_TAG, "List size is " + mDb.liftDao().getAllLifts().size());
+//            Log.v(LOG_TAG, "1st lift in the list is " + mDb.liftDao().getAllLifts().get(0).getName());
+////            assert mDb.liftDao().getLiftById(0).getName().equals("Overhead press") : "Overhead press is in db";
             initialSetup();
         }
+
+
+
 
     }
 
@@ -66,18 +103,9 @@ public class CycleManager extends AppCompatActivity implements BaseFragment.OnFr
 
     }
 
-    private void managerSetup(){
-        setContentView(R.layout.cycle_manager);
-        bottomNavBarsetup();
-        todayDate = getDate();
-        if(cycleDate==null){
-            cycleDate = todayDate;
-        }
-
-    }
 
     private void bottomNavBarsetup(){
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
 //
 //        transaction.replace(R.id.fragment_container, new CycleManagerFragment());
 //        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CycleManagerFragment()).commit();
@@ -101,13 +129,11 @@ public class CycleManager extends AppCompatActivity implements BaseFragment.OnFr
                 }
                 transaction.replace(R.id.fragment_container, selectedFragment);
                 transaction.addToBackStack(null);
-                transaction.commit();
+                transaction.commitAllowingStateLoss();
 
                 return true;
             }
         });
-
-        bottomNavigationView.setSelectedItemId(R.id.action_cycle);
     }
 //
 //    @Override
@@ -116,13 +142,7 @@ public class CycleManager extends AppCompatActivity implements BaseFragment.OnFr
 //        return true;
 //    }
 
-    private String getDate(){
-        Calendar rightNow = Calendar.getInstance();
-        String month = rightNow.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-        int day = rightNow.get(rightNow.DAY_OF_MONTH);
-        int year = rightNow.get(rightNow.YEAR);
-        return month + " " + day + ", " + year;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -165,7 +185,9 @@ public class CycleManager extends AppCompatActivity implements BaseFragment.OnFr
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode==RC_SETUP && resultCode== Activity.RESULT_OK){
             lifts = data.getParcelableArrayListExtra(LIFT_LIST_KEY);
-            program = data.getParcelableExtra(PROGRAM_KEY);
+//            program = data.getParcelableExtra(PROGRAM_KEY);
+
+            bottomNavigationView.setSelectedItemId(R.id.action_cycle);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

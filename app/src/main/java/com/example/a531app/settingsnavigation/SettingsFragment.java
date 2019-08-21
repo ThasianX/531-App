@@ -2,6 +2,7 @@ package com.example.a531app.settingsnavigation;
 
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,8 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import com.crashlytics.android.Crashlytics;
 import com.example.a531app.R;
+import com.example.a531app.architecture.LiftListViewModel;
+import com.example.a531app.architecture.LiftModel;
 import com.example.a531app.cyclenavigation.CycleManager;
 import com.example.a531app.daysnavigation.DayAdapter;
 import com.example.a531app.utilities.Program;
@@ -43,7 +45,6 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     private RecyclerView recyclerView;
     private SelectableAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<Lift> mLifts;
 
     private AppCompatSpinner mProgram;
     private AppCompatSpinner mRoundTo;
@@ -52,6 +53,8 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     private AppCompatSpinner deadliftProgress;
     private AppCompatSpinner benchProgress;
     private AppCompatSpinner squatProgress;
+
+    private List<LiftModel> liftModels;
 
     private static int RC_EDIT_LIFT = 1234;
     public static final String EDIT_MAX_KEY = "com.example.a531app.edit";
@@ -80,7 +83,8 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     public View providedView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        mLifts = CycleManager.getLifts();
+        LiftListViewModel model = ViewModelProviders.of(this).get(LiftListViewModel.class);
+        liftModels = model.getLiftModels();
 
         recyclerView = view.findViewById(R.id.rv_maxes);
         recyclerView.setHasFixedSize(true);
@@ -88,7 +92,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new SelectableAdapter(getActivity(), this, mLifts);
+        adapter = new SelectableAdapter(getActivity(), this, liftModels);
         recyclerView.setAdapter(adapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), ((LinearLayoutManager) layoutManager).getOrientation());
@@ -166,7 +170,6 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
 
     private void setSpinners(){
 
-
         mProgram.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -181,7 +184,14 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
             }
         });
 
-        double value = mLifts.get(0).getRound_to();
+//        double value = lifts.get(0).getRound_to();
+//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.round_to_array, android.R.layout.simple_spinner_item);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        mRoundTo.setAdapter(spinnerAdapter);
+//        int position = spinnerAdapter.getPosition(value+" lb");
+//        mRoundTo.setSelection(position);
+
+        double value = liftModels.get(0).getRound_to();
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.round_to_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mRoundTo.setAdapter(spinnerAdapter);
@@ -194,10 +204,9 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+mLifts.get(0).getRound_to())){
-                    Crashlytics.log("Round to nearest value changed to "+value);
+                if(!value.equals(""+liftModels.get(0).getRound_to())){
                     double round = Double.valueOf(value);
-                    adapter.changeRoundTo(round);
+                    liftModels.get(0).setRound_to(round);
                 }
             }
 
@@ -207,7 +216,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
             }
         });
 
-        value = mLifts.get(0).getProgression();
+        value = liftModels.get(0).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         overheadProgress.setAdapter(spinnerAdapter);
@@ -220,10 +229,9 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+mLifts.get(0).getProgression())){
-                    Crashlytics.log("Overhead progress changed to " + value);
+                if(!value.equals(""+liftModels.get(0).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 0);
+                    liftModels.get(0).setProgression(progression);
                 }
             }
 
@@ -233,7 +241,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
             }
         });
 
-        value = mLifts.get(1).getProgression();
+        value = liftModels.get(1).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         deadliftProgress.setAdapter(spinnerAdapter);
@@ -246,10 +254,9 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+mLifts.get(1).getProgression())){
-                    Crashlytics.log("Deadlift progress changed to " + value);
+                if(!value.equals(""+liftModels.get(1).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 1);
+                    liftModels.get(1).setProgression(progression);
                 }
             }
 
@@ -259,7 +266,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
             }
         });
 
-        value = mLifts.get(2).getProgression();
+        value = liftModels.get(2).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         benchProgress.setAdapter(spinnerAdapter);
@@ -272,10 +279,9 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+mLifts.get(2).getProgression())){
-                    Crashlytics.log("Bench press progress changed to " + value);
+                if(!value.equals(""+liftModels.get(2).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 2);
+                    liftModels.get(2).setProgression(progression);
                 }
             }
 
@@ -285,7 +291,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
             }
         });
 
-        value = mLifts.get(3).getProgression();
+        value = liftModels.get(3).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         squatProgress.setAdapter(spinnerAdapter);
@@ -298,10 +304,9 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+mLifts.get(3).getProgression())){
-                    Crashlytics.log("Squat progress changed to " + value);
+                if(!value.equals(""+liftModels.get(3).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 3);
+                    liftModels.get(3).setProgression(progression);
                 }
             }
 
@@ -330,20 +335,11 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     }
 
     @Override
-    public void onClick(Lift lift, int position) {
-        Intent intent = new Intent(getActivity(), UpdateTrainingMax.class);
-        intent.putExtra(EDIT_MAX_KEY, lift);
+    public void onClick(LiftModel lift, int position) {
         editPosition = position;
-        startActivityForResult(intent, RC_EDIT_LIFT);
+        Intent intent = new Intent(getActivity(), UpdateTrainingMax.class);
+        intent.putExtra(EDIT_MAX_KEY, editPosition);
+        startActivity(intent);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==RC_EDIT_LIFT && resultCode== Activity.RESULT_OK){
-            Lift lift = data.getParcelableExtra(EDIT_MAX_KEY);
-            adapter.changeLift(lift.getTraining_max(), editPosition);
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 }

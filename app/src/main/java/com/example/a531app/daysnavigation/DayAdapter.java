@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.a531app.R;
+import com.example.a531app.architecture.LiftModel;
 import com.example.a531app.settingsnavigation.SettingsFragment;
 import com.example.a531app.utilities.Timer;
 import com.example.a531app.utilities.WeekPercentages;
@@ -25,7 +29,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHolder> {
 
-    private final Lift lift;
+    private final LiftModel lift;
     private final Context mContext;
     private final int week;
     private final int[] coresetPercentages;
@@ -38,11 +42,14 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
     public static boolean secondaryEnabled;
     public static boolean assistanceEnabled;
 
+    private static final String LOG_TAG = DayAdapter.class.getSimpleName();
+
+    private boolean checkedSetup = true;
+
+    private SparseBooleanArray itemStateArray = new SparseBooleanArray();
 
 
-
-
-    public DayAdapter(Lift lift, int week, String secondary, Context context){
+    public DayAdapter(LiftModel lift, int week, String secondary, Context context){
         this.lift = lift;
         this.week = week;
         mContext = context;
@@ -62,6 +69,23 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
         assistanceEnabled = sharedPreferences.getBoolean(SettingsFragment.ASSISTANCE_CHECKED_KEY, true);
     }
 
+    private boolean isChecked(int position){
+//        SharedPreferences sharedPreferences = mContext.getSharedPreferences("prefs", MODE_PRIVATE);
+//        boolean checked = sharedPreferences.getBoolean("CB"+week+lift.getDay()+ position, false);
+//        Log.v(LOG_TAG, "SP Checkbox #" + position + " for week " + week + " for day " + lift.getDay() + " is "+checked);
+//        return checked;
+        return itemStateArray.get(position, false);
+    }
+
+    private void setChecked(int position, boolean checked){
+//        SharedPreferences sharedPreferences = mContext.getSharedPreferences("prefs", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putBoolean("CB"+week+lift.getDay()+position, checked);
+//        Log.v(LOG_TAG, "Setting SP checkbox #"+position + "for week " + week + " for day " + lift.getDay() + " to " + checked);
+//        editor.apply();
+        itemStateArray.put(position, checked);
+    }
+
     @NonNull
     @Override
     public DayAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -79,15 +103,22 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DayAdapterViewHolder dayAdapterViewHolder, int i) {
+    public void onBindViewHolder(@NonNull DayAdapterViewHolder dayAdapterViewHolder, int position) {
 
+        if(checkedSetup){
+            dayAdapterViewHolder.selectionState.setChecked(isChecked(position));
+            dayAdapterViewHolder.setCheckedListener();
+            if(position==12){
+                checkedSetup=false;
+            }
+        }
 
-        if(i<3) {
-            dayAdapterViewHolder.setLabel.setText(coresetReps[(week-1)*3+i] + " reps at " + round((coresetPercentages[(week-1)*3+i] * 0.01 * lift.getTraining_max()), lift.getRound_to())  + " lb");
-            dayAdapterViewHolder.setPercetagesLabel.setText(coresetPercentages[(week-1)*3+i] + "% of training max");
-            if(i==0){
+        if(position<3) {
+            dayAdapterViewHolder.setLabel.setText(coresetReps[(week-1)*3+position] + " reps at " + round((coresetPercentages[(week-1)*3+position] * 0.01 * lift.getTraining_max()), lift.getRound_to())  + " lb");
+            dayAdapterViewHolder.setPercetagesLabel.setText(coresetPercentages[(week-1)*3+position] + "% of training max");
+            if(position==0){
                 dayAdapterViewHolder.setName.setText(lift.getName() + " - 5/3/1");
-            } else if(i==2){
+            } else if(position==2){
                 if(week==4){
                     dayAdapterViewHolder.previousPR.setVisibility(View.GONE);
                 } else {
@@ -95,17 +126,17 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
                     dayAdapterViewHolder.previousPR.setText("PR to beat: " + lift.getPersonal_record() + " reps");
                 }
             }
-        } else if(i<8){
-            dayAdapterViewHolder.setLabel.setText("10 reps at " + round((secondarysetPercetanges[i-3]*0.01*lift.getTraining_max()), lift.getRound_to()) + " lb");
-            dayAdapterViewHolder.setPercetagesLabel.setText(secondarysetPercetanges[i-3] + "% of training max");
+        } else if(position<8){
+            dayAdapterViewHolder.setLabel.setText("10 reps at " + round((secondarysetPercetanges[position-3]*0.01*lift.getTraining_max()), lift.getRound_to()) + " lb");
+            dayAdapterViewHolder.setPercetagesLabel.setText(secondarysetPercetanges[position-3] + "% of training max");
             dayAdapterViewHolder.previousPR.setVisibility(View.GONE);
-            if(i==3){
+            if(position==3){
                 dayAdapterViewHolder.setName.setText(lift.getName() + " - Secondary");
             }
         } else {
             dayAdapterViewHolder.setPercetagesLabel.setVisibility(View.GONE);
             dayAdapterViewHolder.setLabel.setText("10 reps");
-            if(i==8){
+            if(position==8){
                 dayAdapterViewHolder.setName.setText("Lat work - Assistance");
             }
         }
@@ -129,6 +160,18 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
         return 1;
     }
 
+
+    private void startTimer(int position){
+        Intent intent = new Intent(mContext, Timer.class);
+        if(position>=0 && position<3 && coreEnabled) {
+            mContext.startActivity(intent);
+        } else if(position>=3 && position<8 && secondaryEnabled){
+            mContext.startActivity(intent);
+        } else if(position>=8 && assistanceEnabled){
+            mContext.startActivity(intent);
+        }
+    }
+
     public class DayAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView setLabel;
@@ -150,20 +193,75 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
 
             view.setOnClickListener(this);
 
+        }
+
+        public void setCheckedListener(){
             selectionState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
-                        int position = getAdapterPosition();
-                        Intent intent = new Intent(mContext, Timer.class);
-                        if(position>=0 && position<3 && coreEnabled) {
-                            mContext.startActivity(intent);
-                        } else if(position>=3 && position<8 && secondaryEnabled){
-                            mContext.startActivity(intent);
-                        } else if(position>=8 && assistanceEnabled){
-                            mContext.startActivity(intent);
+                        final int position = getAdapterPosition();
+                        setChecked(position, true);
+
+                        if(position==2) {
+                            final View view = LayoutInflater.from(mContext).inflate(R.layout.pr_alert_dialog, null);
+                            final AlertDialog alert = new AlertDialog.Builder(mContext).create();
+                            alert.setTitle("New PR");
+                            alert.setCancelable(false);
+
+
+                            final EditText etPr = view.findViewById(R.id.et_pr);
+
+                            alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String reps = etPr.getText().toString();
+                                    if(!reps.equals("")){
+                                        int newPr = Integer.valueOf(etPr.getText().toString());
+                                            if (newPr > lift.getPersonal_record()) {
+                                                lift.setPersonal_record(newPr);
+                                                previousPR.setText("Achieved a new rep max PR of " + lift.getPersonal_record() + " reps");
+                                            } else {
+                                                previousPR.setText("Good effort but not enough to beat your rep max PR of " + lift.getPersonal_record() + " reps");
+                                            }
+                                        startTimer(position);
+                                    }
+
+                                }
+                            });
+
+                            alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    selectionState.setChecked(false);
+                                    alert.dismiss();
+                                }
+                            });
+
+                            alert.setView(view);
+                            alert.show();
+//
+//                            alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener(){
+//                                @Override
+//                                public void onClick(View v) {
+//                                    boolean isNumber;
+//                                    int newPr = Integer.valueOf(etPr.getText().toString());
+//                                    if (newPr > lift.getPersonal_record()) {
+//                                        lift.setPersonal_record(newPr);
+//                                        previousPR.setText("Achieved a new rep max PR of " + lift.getPersonal_record() + " reps");
+//                                    } else {
+//                                        previousPR.setText("Good effort but not enough to beat your rep max PR of " + lift.getPersonal_record() + " reps");
+//                                    }
+//                                    startTimer(position);
+//
+//                                }
+//                            });
+                        } else {
+                            startTimer(position);
                         }
 
+                    } else {
+                        setChecked(getAdapterPosition(), false);
                     }
                 }
             });
@@ -172,48 +270,10 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            if(position==2){
-
-            }
             if(selectionState.isChecked()){
                 selectionState.setChecked(false);
             } else {
-                if(position==2){
-                    final View view = LayoutInflater.from(mContext).inflate(R.layout.pr_alert_dialog, null);
-                    final AlertDialog alert = new AlertDialog.Builder(mContext).create();
-                    alert.setTitle("New PR");
-                    alert.setCancelable(false);
-
-
-                    final EditText etPr = view.findViewById(R.id.et_pr);
-
-                    alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int newPr = Integer.valueOf(etPr.getText().toString());
-                            if(newPr>lift.getPersonal_record()) {
-                                lift.setPersonal_record(newPr);
-                                previousPR.setText("Achieved a new rep max PR of " + lift.getPersonal_record() + " reps");
-                            } else {
-                                previousPR.setText("Good effort but not enough to beat your rep max PR of " + lift.getPersonal_record() + " reps");
-                            }
-                            selectionState.setChecked(true);
-                        }
-                    });
-
-                    alert.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            alert.dismiss();
-                        }
-                    });
-
-                    alert.setView(view);
-                    alert.show();
-                } else {
-                    selectionState.setChecked(true);
-                }
-
+                selectionState.setChecked(true);
             }
         }
     }

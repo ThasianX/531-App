@@ -1,6 +1,7 @@
 package com.example.a531app.daysnavigation;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.a531app.R;
+import com.example.a531app.architecture.LiftListViewModel;
 import com.example.a531app.utilities.BaseFragment;
 
 /**
@@ -44,12 +46,17 @@ public class WeekCycleFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ViewPager viewPager = view.findViewById(R.id.viewpager);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), mContext, week);
+
+        LiftListViewModel model = ViewModelProviders.of(getActivity()).get(LiftListViewModel.class);
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), mContext, week, model.getLiftModels());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
 
         TabLayout tabLayout = view.findViewById(R.id.days_tab);
         tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.example.a531app.setup;
 
 import android.app.Activity;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,14 +14,17 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
-import com.crashlytics.android.Crashlytics;
 import com.example.a531app.R;
+import com.example.a531app.architecture.LiftListViewModel;
+import com.example.a531app.architecture.LiftModel;
+import com.example.a531app.cyclenavigation.CurrentCycleFragment;
 import com.example.a531app.utilities.UpdateTrainingMax;
 import com.example.a531app.cyclenavigation.CycleManager;
 import com.example.a531app.utilities.Program;
@@ -25,14 +32,15 @@ import com.example.a531app.utilities.Lift;
 import com.example.a531app.settingsnavigation.SelectableAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class SetupActivity extends AppCompatActivity implements SelectableAdapter.SelectableAdapterClickListener{
 
     private RecyclerView recyclerView;
     private SelectableAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<Lift> lifts;
 
     private AppCompatSpinner mProgram;
     private AppCompatSpinner mRoundTo;
@@ -46,7 +54,13 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
     public static String EDIT_MAX_KEY = "com.example.a531app.edit";
     private int editPosition;
 
-    private String programName;
+    public static final String LOG_TAG = SetupActivity.class.getSimpleName();
+
+    private List<LiftModel> liftModels;
+
+    private LiftListViewModel model;
+
+
 
 
     @Override
@@ -61,15 +75,18 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
         getSupportActionBar().setTitle("Setup");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        recyclerView = (RecyclerView) findViewById(R.id.rv_maxes);
+        model = ViewModelProviders.of(this).get(LiftListViewModel.class);
+        liftModels = model.getLiftModels();
+
+        Log.v(LOG_TAG, "List size is " + liftModels.size());
+
+        recyclerView = findViewById(R.id.rv_maxes);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        Intent intent = getIntent();
-        lifts = intent.getParcelableArrayListExtra(CycleManager.LIFT_LIST_KEY);
-        adapter = new SelectableAdapter(this, this, lifts);
+        adapter = new SelectableAdapter(this, this, liftModels);
         recyclerView.setAdapter(adapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), ((LinearLayoutManager) layoutManager).getOrientation());
@@ -103,7 +120,14 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
             }
         });
 
-        double value = lifts.get(0).getRound_to();
+//        double value = lifts.get(0).getRound_to();
+//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.round_to_array, android.R.layout.simple_spinner_item);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        mRoundTo.setAdapter(spinnerAdapter);
+//        int position = spinnerAdapter.getPosition(value+" lb");
+//        mRoundTo.setSelection(position);
+
+        double value = liftModels.get(0).getRound_to();
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.round_to_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mRoundTo.setAdapter(spinnerAdapter);
@@ -116,10 +140,10 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+lifts.get(0).getRound_to())){
-                    Crashlytics.log("Round to nearest value changed to "+value);
+                if(!value.equals(""+liftModels.get(0).getRound_to())){
                     double round = Double.valueOf(value);
-                    adapter.changeRoundTo(round);
+                    liftModels.get(0).setRound_to(round);
+                    model.updateRoundTo(liftModels.get(0));
                 }
             }
 
@@ -129,7 +153,7 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
             }
         });
 
-        value = lifts.get(0).getProgression();
+        value = liftModels.get(0).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         overheadProgress.setAdapter(spinnerAdapter);
@@ -142,10 +166,10 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+lifts.get(0).getProgression())){
-                    Crashlytics.log("Overhead progress changed to " + value);
+                if(!value.equals(""+liftModels.get(0).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 0);
+                    liftModels.get(0).setProgression(progression);
+                    model.updateProgression(liftModels.get(0));
                 }
             }
 
@@ -155,7 +179,7 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
             }
         });
 
-        value = lifts.get(1).getProgression();
+        value = liftModels.get(1).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         deadliftProgress.setAdapter(spinnerAdapter);
@@ -168,10 +192,10 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+lifts.get(1).getProgression())){
-                    Crashlytics.log("Deadlift progress changed to " + value);
+                if(!value.equals(""+liftModels.get(1).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 1);
+                    liftModels.get(1).setProgression(progression);
+                    model.updateProgression(liftModels.get(1));
                 }
             }
 
@@ -181,7 +205,7 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
             }
         });
 
-        value = lifts.get(2).getProgression();
+        value = liftModels.get(2).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         benchProgress.setAdapter(spinnerAdapter);
@@ -194,10 +218,10 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+lifts.get(2).getProgression())){
-                    Crashlytics.log("Bench press progress changed to " + value);
+                if(!value.equals(""+liftModels.get(2).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 2);
+                    liftModels.get(2).setProgression(progression);
+                    model.updateProgression(liftModels.get(2));
                 }
             }
 
@@ -207,7 +231,7 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
             }
         });
 
-        value = lifts.get(3).getProgression();
+        value = liftModels.get(3).getProgression();
         spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.progression_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         squatProgress.setAdapter(spinnerAdapter);
@@ -220,10 +244,10 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
                 String value = parent.getItemAtPosition(position).toString();
                 int lbPos = value.indexOf(" lb");
                 value = value.substring(0, lbPos);
-                if(!value.equals(""+lifts.get(3).getProgression())){
-                    Crashlytics.log("Squat progress changed to " + value);
+                if(!value.equals(""+liftModels.get(3).getProgression())){
                     double progression = Double.valueOf(value);
-                    adapter.changeProgression(progression, 3);
+                    liftModels.get(3).setProgression(progression);
+                    model.updateProgression(liftModels.get(3));
                 }
             }
 
@@ -247,15 +271,15 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
         if(itemId==R.id.action_done){
             SharedPreferences sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("firstLaunch", false);
+            editor.putBoolean(CycleManager.FIRST_LAUNCH_KEY, false);
+            editor.putString(CurrentCycleFragment.CYCLE_DATE_KEY, getDate());
             editor.apply();
 
-            Program program = new Program(programName);
+//            Program program = new Program(programName);
 
 
             Intent intent = new Intent();
-            intent.putParcelableArrayListExtra(CycleManager.LIFT_LIST_KEY, (ArrayList) lifts);
-            intent.putExtra(CycleManager.PROGRAM_KEY, programName);
+//            intent.putExtra(CycleManager.PROGRAM_KEY, programName);
             setResult(Activity.RESULT_OK, intent);
             finish();
             return true;
@@ -264,19 +288,26 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
         return super.onOptionsItemSelected(item);
     }
 
+    private String getDate(){
+        Calendar rightNow = Calendar.getInstance();
+        String month = rightNow.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        int day = rightNow.get(rightNow.DAY_OF_MONTH);
+        int year = rightNow.get(rightNow.YEAR);
+        return month + " " + day + ", " + year;
+    }
+
     @Override
-    public void onClick(Lift lift, int position) {
+    public void onClick(LiftModel lift, int position) {
         editPosition = position;
         Intent intent = new Intent(this, UpdateTrainingMax.class);
-        intent.putExtra(EDIT_MAX_KEY, lift);
+        intent.putExtra(EDIT_MAX_KEY, editPosition);
         startActivityForResult(intent, RC_EDIT_LIFT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode==RC_EDIT_LIFT && resultCode== Activity.RESULT_OK){
-            Lift lift = data.getParcelableExtra(EDIT_MAX_KEY);
-            adapter.changeLift(lift.getTraining_max(), editPosition);
+        if(requestCode==RC_EDIT_LIFT && resultCode==Activity.RESULT_OK){
+            adapter.changeLift(model.getLiftModels().get(editPosition), editPosition);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }

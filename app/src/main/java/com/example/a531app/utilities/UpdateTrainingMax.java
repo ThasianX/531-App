@@ -1,6 +1,7 @@
 package com.example.a531app.utilities;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a531app.R;
+import com.example.a531app.architecture.LiftListViewModel;
+import com.example.a531app.architecture.LiftModel;
+
+import java.util.List;
 
 import static com.example.a531app.setup.SetupActivity.EDIT_MAX_KEY;
 
@@ -25,11 +30,16 @@ public class UpdateTrainingMax extends AppCompatActivity {
     private Button mUpdate;
     private String name;
     private double max;
-    private Lift lift;
+    private int liftPos;
     private TextView mNewMax;
 
     private EditText mReps;
     private EditText mWeight;
+    private List<LiftModel> liftModels;
+    private LiftModel lift;
+
+    private LiftListViewModel model;
+
 
 
     @Override
@@ -49,7 +59,12 @@ public class UpdateTrainingMax extends AppCompatActivity {
         mNewMax = findViewById(R.id.tv_new_max);
 
         Intent intent = getIntent();
-        lift = intent.getParcelableExtra(EDIT_MAX_KEY);
+        liftPos = intent.getIntExtra(EDIT_MAX_KEY, -1);
+
+        model = ViewModelProviders.of(this).get(LiftListViewModel.class);
+        liftModels = model.getLiftModels();
+
+        lift = liftModels.get(liftPos);
 
         name = lift.getName();
         max = lift.getTraining_max();
@@ -112,10 +127,11 @@ public class UpdateTrainingMax extends AppCompatActivity {
             double unroundedMax = Double.valueOf(max);
             double roundedMax = round(unroundedMax, lift.getRound_to());
             lift.setTraining_max(roundedMax);
+            model.updateMax(lift);
             Intent resultIntent = new Intent();
-            resultIntent.putExtra(EDIT_MAX_KEY, lift);
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
+
         } else {
             Toast.makeText(this, "Please input a valid number", Toast.LENGTH_SHORT).show();
         }

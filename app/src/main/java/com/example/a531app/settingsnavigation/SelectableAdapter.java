@@ -9,26 +9,26 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.a531app.R;
-import com.example.a531app.utilities.Lift;
+import com.example.a531app.architecture.LiftModel;
 
 import java.util.List;
 
 public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.SelectableViewHolder>{
 
-    private final List<Lift> mLifts;
+    private List<LiftModel> liftModels;
     private final Context mContext;
 
     private SelectableAdapterClickListener clickListener;
 
 
     public interface SelectableAdapterClickListener{
-        void onClick(Lift lift, int position);
+        void onClick(LiftModel lift, int position);
     }
 
-    public SelectableAdapter(Context context, SelectableAdapterClickListener listener, List<Lift> lifts){
+    public SelectableAdapter(Context context, SelectableAdapterClickListener listener, List<LiftModel> lifts){
         mContext = context;
         clickListener = listener;
-        mLifts = lifts;
+        liftModels = lifts;
     }
 
     @NonNull
@@ -41,7 +41,7 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Se
 
     @Override
     public void onBindViewHolder(@NonNull SelectableViewHolder selectableViewHolder, int position) {
-        Lift lift = mLifts.get(position);
+        LiftModel lift = liftModels.get(position);
         String name = lift.getName();
         selectableViewHolder.mLiftLabel.setText(name);
         String max = "" + lift.getTraining_max();
@@ -51,31 +51,13 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Se
 
     @Override
     public int getItemCount() {
-        return mLifts.size();
+        return liftModels.size();
     }
 
-    public List<Lift> getmLifts() {
-        return mLifts;
+    public void changeLift(LiftModel lift, int position){
+        liftModels.set(position, lift);
+        notifyItemChanged(position);
     }
-
-    public void changeLift(double max, int position){
-        mLifts.get(position).setTraining_max(max);
-        notifyDataSetChanged();
-    }
-
-    public void changeRoundTo(double round){
-        for(Lift lift : mLifts){
-            lift.setRound_to(round);
-        }
-        notifyDataSetChanged();
-    }
-
-    public void changeProgression(double progression, int position){
-        mLifts.get(position).setProgression(progression);
-        notifyDataSetChanged();
-    }
-
-
 
     public class SelectableViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -94,7 +76,7 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Se
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            Lift lift = mLifts.get(position);
+            LiftModel lift = liftModels.get(position);
             clickListener.onClick(lift, position);
         }
     }

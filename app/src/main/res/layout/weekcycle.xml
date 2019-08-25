@@ -18,42 +18,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<Button-->
-            <!--style="@style/DayOfWeekButtonStyle"-->
-            <!--android:id="@+id/dayOne"-->
-            <!--tools:text="Monday"/>-->
-
-        <!--<Button-->
-            <!--style="@style/DayOfWeekButtonStyle"-->
-            <!--android:id="@+id/dayTwo"-->
-            <!--tools:text="Tuesday"/>-->
-
-        <!--<Button-->
-            <!--style="@style/DayOfWeekButtonStyle"-->
-            <!--android:id="@+id/dayThree"-->
-            <!--tools:text="Thursday"/>-->
-
-        <!--<Button-->
-            <!--style="@style/DayOfWeekButtonStyle"-->
-            <!--android:id="@+id/dayFour"-->
-            <!--tools:text="Friday"/>-->
-
-    <!--</LinearLayout>-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/rv_day">-->
-
-    <!--</android.support.v7.widget.RecyclerView>-->
-
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>

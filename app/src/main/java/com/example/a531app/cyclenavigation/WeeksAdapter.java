@@ -1,6 +1,7 @@
 package com.example.a531app.cyclenavigation;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,16 +26,48 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeeksViewHol
 
     @NonNull
     @Override
-    public WeeksViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public WeeksViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.weeks_row, viewGroup, false);
 
         return new WeeksViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WeeksViewHolder weeksViewHolder, int i) {
-        String week = weekLabels[i];
+    public void onBindViewHolder(@NonNull WeeksViewHolder weeksViewHolder, int position) {
+        String week = weekLabels[position];
         weeksViewHolder.weekLabel.setText(week);
+
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(CycleManager.SP_NAME, Context.MODE_PRIVATE);
+
+        int value;
+        int progress;
+        switch(position){
+            case 0:
+                value = sharedPreferences.getInt(CurrentCycleFragment.WEEK_1_KEY, 0);
+                weeksViewHolder.progressBar.setProgress(value);
+                progress = (int) Math.rint(value/52.0*100);
+                weeksViewHolder.progressStatus.setText(""+progress+"%");
+                break;
+            case 1:
+                value=sharedPreferences.getInt(CurrentCycleFragment.WEEK_2_KEY, 0);
+                weeksViewHolder.progressBar.setProgress(value);
+                progress = (int) Math.rint(value/52.0*100);
+                weeksViewHolder.progressStatus.setText(""+progress+"%");
+                break;
+            case 2:
+                value= sharedPreferences.getInt(CurrentCycleFragment.WEEK_3_KEY, 0);
+                weeksViewHolder.progressBar.setProgress(value);
+                progress = (int) Math.rint(value/52.0*100);
+                weeksViewHolder.progressStatus.setText(""+progress+"%");
+                break;
+            case 3:
+                value = sharedPreferences.getInt(CurrentCycleFragment.WEEK_4_KEY, 0);
+                weeksViewHolder.progressBar.setProgress(value);
+                progress = (int) Math.rint(value/52.0*100);
+                weeksViewHolder.progressStatus.setText(""+progress+"%");
+                break;
+        }
+
     }
 
     @Override
@@ -45,9 +78,6 @@ public class WeeksAdapter extends RecyclerView.Adapter<WeeksAdapter.WeeksViewHol
     public interface WeeksAdapterClickListener{
         void onClick(int week);
     }
-
-
-
 
     public class WeeksViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 

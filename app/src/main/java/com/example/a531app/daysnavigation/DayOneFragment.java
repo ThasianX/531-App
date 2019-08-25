@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.example.a531app.R;
 import com.example.a531app.architecture.LiftListViewModel;
+import com.example.a531app.architecture.LiftModel;
 import com.example.a531app.utilities.Lift;
 
 /**
@@ -47,7 +48,8 @@ public class DayOneFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_day);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new DayAdapter(model.getLiftById(id), week, secondary, getActivity());
+        LiftModel lift = model.getLiftById(id);
+        adapter = new DayAdapter(lift, week, secondary, getActivity(), model);
         recyclerView.setAdapter(adapter);
 
         layoutManager = new LinearLayoutManager(getContext());

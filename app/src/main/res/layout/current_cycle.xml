@@ -5,13 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/btn_start_cycle"
+        android:text="@string/start_cycle_btn"
+        android:layout_margin="8dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:id="@+id/tv_start_date"
-        tools:text="Cycle began on Jul 23, 2019"/>
+        tools:text="Cycle began on Jul 23, 2019"
+        android:padding="16dp" />
 
     <android.support.v7.widget.RecyclerView android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/btn_complete_cycle"
-        android:text="@string/complete_cycle_btn"/>
+        android:text="@string/complete_cycle_btn"
+        android:layout_margin="16dp"/>
 
 </LinearLayout>

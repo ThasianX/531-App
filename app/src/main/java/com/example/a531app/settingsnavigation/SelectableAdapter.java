@@ -66,8 +66,8 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Se
 
         public SelectableViewHolder(View view){
             super(view);
-            mLiftLabel = (TextView) view.findViewById(R.id.lift_label);
-            mTrainingMax = (TextView) view.findViewById(R.id.training_max_tv);
+            mLiftLabel = view.findViewById(R.id.lift_label);
+            mTrainingMax = view.findViewById(R.id.training_max_tv);
 
             view.setOnClickListener(this);
 

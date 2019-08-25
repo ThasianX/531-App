@@ -8,6 +8,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import com.example.a531app.R;
+import com.example.a531app.architecture.AppExecutors;
 import com.example.a531app.architecture.LiftListViewModel;
 import com.example.a531app.architecture.LiftModel;
 import com.example.a531app.cyclenavigation.CurrentCycleFragment;
@@ -76,8 +78,8 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         model = ViewModelProviders.of(this).get(LiftListViewModel.class);
-        liftModels = model.getLiftModels();
 
+        liftModels = model.getLiftModels();
         Log.v(LOG_TAG, "List size is " + liftModels.size());
 
         recyclerView = findViewById(R.id.rv_maxes);
@@ -119,13 +121,6 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
 
             }
         });
-
-//        double value = lifts.get(0).getRound_to();
-//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.round_to_array, android.R.layout.simple_spinner_item);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        mRoundTo.setAdapter(spinnerAdapter);
-//        int position = spinnerAdapter.getPosition(value+" lb");
-//        mRoundTo.setSelection(position);
 
         double value = liftModels.get(0).getRound_to();
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.round_to_array, android.R.layout.simple_spinner_item);
@@ -311,5 +306,10 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

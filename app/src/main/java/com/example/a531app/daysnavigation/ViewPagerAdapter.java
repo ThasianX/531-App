@@ -1,5 +1,6 @@
 package com.example.a531app.daysnavigation;
 
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import java.util.List;
 public class ViewPagerAdapter extends FragmentPagerAdapter{
 
     private Context mContext;
-    private List<LiftModel> mLifts;
+    private LiftListViewModel model;
     private int week;
     private Program program;
     private String[] programDays;
@@ -27,11 +28,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     private String[] secondaryExercises;
 
 
-    public ViewPagerAdapter(FragmentManager fm, Context context, int week, List<LiftModel> lifts) {
+    public ViewPagerAdapter(FragmentManager fm, Context context, int week, LiftListViewModel model) {
         super(fm);
         mContext = context;
         this.week = week;
-        mLifts = lifts;
+        this.model = model;
         program = CycleManager.getProgram();
         programDays = program.getProgramDays();
         coreExercises = program.getCoreExercises();
@@ -42,40 +43,32 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         if (position == 0) {
             String exercise = coreExercises[0];
-            for(LiftModel lift: mLifts){
-                if(lift.getName().equals(exercise)){
-                    DayOneFragment fragment = new DayOneFragment();
-                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[0]));
-                    return fragment;
-                }
-            }
+            LiftModel lift = model.getLiftByName(exercise);
+            DayOneFragment fragment = new DayOneFragment();
+            fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[0]));
+            return fragment;
+
         } else if (position == 1) {
             String exercise = coreExercises[1];
-            for(LiftModel lift: mLifts){
-                if(lift.getName().equals(exercise)){
-                    DayTwoFragment fragment = new DayTwoFragment();
-                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[1]));
-                    return fragment;
-                }
-            }
+            LiftModel lift = model.getLiftByName(exercise);
+            DayTwoFragment fragment = new DayTwoFragment();
+            fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[1]));
+            return fragment;
+
         } else if (position == 2) {
             String exercise = coreExercises[2];
-            for(LiftModel lift: mLifts){
-                if(lift.getName().equals(exercise)){
-                    DayThreeFragment fragment = new DayThreeFragment();
-                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[2]));
-                    return fragment;
-                }
-            }
-        } else {
+            LiftModel lift = model.getLiftByName(exercise);
+            DayThreeFragment fragment = new DayThreeFragment();
+            fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[2]));
+            return fragment;
+
+
+        } else if(position==3){
             String exercise = coreExercises[3];
-            for (LiftModel lift : mLifts) {
-                if (lift.getName().equals(exercise)) {
-                    DayFourFragment fragment = new DayFourFragment();
-                    fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[3]));
-                    return fragment;
-                }
-            }
+            LiftModel lift = model.getLiftByName(exercise);
+            DayFourFragment fragment = new DayFourFragment();
+            fragment.setArguments(returnBundle(lift.exercise_id, secondaryExercises[3]));
+            return fragment;
         }
         return null;
     }

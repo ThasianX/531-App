@@ -1,5 +1,6 @@
 package com.example.a531app.daysnavigation;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a531app.R;
+import com.example.a531app.architecture.LiftListViewModel;
 import com.example.a531app.architecture.LiftModel;
+import com.example.a531app.cyclenavigation.CurrentCycleFragment;
+import com.example.a531app.cyclenavigation.CycleManager;
 import com.example.a531app.settingsnavigation.SettingsFragment;
 import com.example.a531app.utilities.Timer;
 import com.example.a531app.utilities.WeekPercentages;
@@ -36,54 +40,115 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
     private final int[] secondarysetPercetanges;
     private final int[] coresetReps;
 
-    public static String TIMER_ENABLED_KEY = "com.example.a531app.lift";
-
-    public static boolean coreEnabled;
-    public static boolean secondaryEnabled;
-    public static boolean assistanceEnabled;
+    private boolean coreEnabled;
+    private boolean secondaryEnabled;
+    private boolean assistanceEnabled;
 
     private static final String LOG_TAG = DayAdapter.class.getSimpleName();
 
     private boolean checkedSetup = true;
 
-    private SparseBooleanArray itemStateArray = new SparseBooleanArray();
+    private LiftModel secondary;
+    private String assistance;
+
+    private LiftListViewModel model;
+
+//    private SparseBooleanArray itemStateArray = new SparseBooleanArray();
 
 
-    public DayAdapter(LiftModel lift, int week, String secondary, Context context){
+    public DayAdapter(LiftModel lift, int week, String secondary, Context context, LiftListViewModel model){
         this.lift = lift;
         this.week = week;
         mContext = context;
+
         WeekPercentages percentages = new WeekPercentages();
         coresetPercentages = percentages.getCoresetPercentages1();
         secondarysetPercetanges = percentages.getSecondarysetPercentages();
         coresetReps = percentages.getCoresetReps();
+
+        this.model = model;
+
+        this.secondary = model.getLiftByName(secondary);
+        this.assistance = lift.getAssistance();
 
         setUpEnabledTimers();
 
     }
 
     private void setUpEnabledTimers(){
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("prefs", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(CycleManager.SP_NAME, MODE_PRIVATE);
         coreEnabled = sharedPreferences.getBoolean(SettingsFragment.CORE_CHECKED_KEY, true);
         secondaryEnabled= sharedPreferences.getBoolean(SettingsFragment.SECONDARY_CHECKED_KEY, true);
         assistanceEnabled = sharedPreferences.getBoolean(SettingsFragment.ASSISTANCE_CHECKED_KEY, true);
     }
 
     private boolean isChecked(int position){
-//        SharedPreferences sharedPreferences = mContext.getSharedPreferences("prefs", MODE_PRIVATE);
-//        boolean checked = sharedPreferences.getBoolean("CB"+week+lift.getDay()+ position, false);
-//        Log.v(LOG_TAG, "SP Checkbox #" + position + " for week " + week + " for day " + lift.getDay() + " is "+checked);
-//        return checked;
-        return itemStateArray.get(position, false);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(CycleManager.SP_NAME, MODE_PRIVATE);
+        boolean checked = sharedPreferences.getBoolean("CB"+week+lift.getDay()+ position, false);
+        Log.v(LOG_TAG, "SP Checkbox #" + position + " for week " + week + " for day " + lift.getDay() + " is "+checked);
+        return checked;
+//        return itemStateArray.get(position, false);
     }
 
     private void setChecked(int position, boolean checked){
-//        SharedPreferences sharedPreferences = mContext.getSharedPreferences("prefs", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putBoolean("CB"+week+lift.getDay()+position, checked);
-//        Log.v(LOG_TAG, "Setting SP checkbox #"+position + "for week " + week + " for day " + lift.getDay() + " to " + checked);
-//        editor.apply();
-        itemStateArray.put(position, checked);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(CycleManager.SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("CB"+week+lift.getDay()+position, checked);
+
+
+
+        Log.v(LOG_TAG, "Setting SP checkbox #"+position + "for week " + week + " for day " + lift.getDay() + " to " + checked);
+        editor.apply();
+//        itemStateArray.put(position, checked);
+    }
+
+    private void editProgress(boolean checked){
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(CycleManager.SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        int current;
+
+        if(checked){
+            switch (week){
+                case 1:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_1_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_1_KEY, ++current);
+                    break;
+                case 2:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_2_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_2_KEY, ++current);
+                    break;
+                case 3:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_3_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_3_KEY, ++current);
+                    break;
+                case 4:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_4_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_4_KEY, ++current);
+                    break;
+            }
+        } else {
+            switch (week){
+                case 1:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_1_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_1_KEY, --current);
+                    break;
+                case 2:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_2_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_2_KEY, --current);
+                    break;
+                case 3:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_3_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_3_KEY, --current);
+                    break;
+                case 4:
+                    current = sharedPreferences.getInt(CurrentCycleFragment.WEEK_4_KEY, 0);
+                    editor.putInt(CurrentCycleFragment.WEEK_4_KEY, --current);
+                    break;
+            }
+        }
+
+
+        editor.apply();
     }
 
     @NonNull
@@ -127,17 +192,17 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
                 }
             }
         } else if(position<8){
-            dayAdapterViewHolder.setLabel.setText("10 reps at " + round((secondarysetPercetanges[position-3]*0.01*lift.getTraining_max()), lift.getRound_to()) + " lb");
+            dayAdapterViewHolder.setLabel.setText("10 reps at " + round((secondarysetPercetanges[position-3]*0.01*secondary.getTraining_max()), secondary.getRound_to()) + " lb");
             dayAdapterViewHolder.setPercetagesLabel.setText(secondarysetPercetanges[position-3] + "% of training max");
             dayAdapterViewHolder.previousPR.setVisibility(View.GONE);
             if(position==3){
-                dayAdapterViewHolder.setName.setText(lift.getName() + " - Secondary");
+                dayAdapterViewHolder.setName.setText(secondary.getName() + " - Secondary");
             }
         } else {
             dayAdapterViewHolder.setPercetagesLabel.setVisibility(View.GONE);
             dayAdapterViewHolder.setLabel.setText("10 reps");
             if(position==8){
-                dayAdapterViewHolder.setName.setText("Lat work - Assistance");
+                dayAdapterViewHolder.setName.setText(assistance + " - Assistance");
             }
         }
 
@@ -202,6 +267,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
                     if(isChecked){
                         final int position = getAdapterPosition();
                         setChecked(position, true);
+                        editProgress(true);
 
                         if(position==2) {
                             final View view = LayoutInflater.from(mContext).inflate(R.layout.pr_alert_dialog, null);
@@ -220,6 +286,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
                                         int newPr = Integer.valueOf(etPr.getText().toString());
                                             if (newPr > lift.getPersonal_record()) {
                                                 lift.setPersonal_record(newPr);
+                                                model.updatePr(lift);
                                                 previousPR.setText("Achieved a new rep max PR of " + lift.getPersonal_record() + " reps");
                                             } else {
                                                 previousPR.setText("Good effort but not enough to beat your rep max PR of " + lift.getPersonal_record() + " reps");
@@ -262,6 +329,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
 
                     } else {
                         setChecked(getAdapterPosition(), false);
+                        editProgress(false);
                     }
                 }
             });
@@ -269,7 +337,6 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayAdapterViewHo
 
         @Override
         public void onClick(View v) {
-            int position = getAdapterPosition();
             if(selectionState.isChecked()){
                 selectionState.setChecked(false);
             } else {

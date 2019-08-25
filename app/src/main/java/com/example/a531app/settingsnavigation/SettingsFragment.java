@@ -54,6 +54,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     private AppCompatSpinner benchProgress;
     private AppCompatSpinner squatProgress;
 
+    private LiftListViewModel model;
     private List<LiftModel> liftModels;
 
     private static int RC_EDIT_LIFT = 1234;
@@ -83,7 +84,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     public View providedView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        LiftListViewModel model = ViewModelProviders.of(this).get(LiftListViewModel.class);
+        model = ViewModelProviders.of(getActivity()).get(LiftListViewModel.class);
         liftModels = model.getLiftModels();
 
         recyclerView = view.findViewById(R.id.rv_maxes);
@@ -129,11 +130,6 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 editor.putBoolean(CORE_CHECKED_KEY, isChecked);
                 editor.apply();
 
-                if(isChecked){
-                    DayAdapter.coreEnabled = true;
-                } else {
-                    DayAdapter.coreEnabled = false;
-                }
             }
         });
 
@@ -144,11 +140,6 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(SECONDARY_CHECKED_KEY, isChecked);
                 editor.apply();
-                if(isChecked){
-                    DayAdapter.secondaryEnabled = true;
-                } else {
-                    DayAdapter.secondaryEnabled = false;
-                }
             }
         });
 
@@ -159,11 +150,6 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(ASSISTANCE_CHECKED_KEY, isChecked);
                 editor.apply();
-                if(isChecked){
-                    DayAdapter.assistanceEnabled = true;
-                } else {
-                    DayAdapter.assistanceEnabled = false;
-                }
             }
         });
     }
@@ -184,13 +170,6 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
             }
         });
 
-//        double value = lifts.get(0).getRound_to();
-//        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.round_to_array, android.R.layout.simple_spinner_item);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        mRoundTo.setAdapter(spinnerAdapter);
-//        int position = spinnerAdapter.getPosition(value+" lb");
-//        mRoundTo.setSelection(position);
-
         double value = liftModels.get(0).getRound_to();
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.round_to_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -207,6 +186,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 if(!value.equals(""+liftModels.get(0).getRound_to())){
                     double round = Double.valueOf(value);
                     liftModels.get(0).setRound_to(round);
+                    model.updateRoundTo(liftModels.get(0));
                 }
             }
 
@@ -232,6 +212,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 if(!value.equals(""+liftModels.get(0).getProgression())){
                     double progression = Double.valueOf(value);
                     liftModels.get(0).setProgression(progression);
+                    model.updateProgression(liftModels.get(0));
                 }
             }
 
@@ -257,6 +238,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 if(!value.equals(""+liftModels.get(1).getProgression())){
                     double progression = Double.valueOf(value);
                     liftModels.get(1).setProgression(progression);
+                    model.updateProgression(liftModels.get(1));
                 }
             }
 
@@ -282,6 +264,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 if(!value.equals(""+liftModels.get(2).getProgression())){
                     double progression = Double.valueOf(value);
                     liftModels.get(2).setProgression(progression);
+                    model.updateProgression(liftModels.get(2));
                 }
             }
 
@@ -307,6 +290,7 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
                 if(!value.equals(""+liftModels.get(3).getProgression())){
                     double progression = Double.valueOf(value);
                     liftModels.get(3).setProgression(progression);
+                    model.updateProgression(liftModels.get(3));
                 }
             }
 
@@ -339,7 +323,14 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
         editPosition = position;
         Intent intent = new Intent(getActivity(), UpdateTrainingMax.class);
         intent.putExtra(EDIT_MAX_KEY, editPosition);
-        startActivity(intent);
+        startActivityForResult(intent, RC_EDIT_LIFT);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==RC_EDIT_LIFT && resultCode==Activity.RESULT_OK){
+            adapter.changeLift(model.getLiftModels().get(editPosition), editPosition);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,8 @@ public class UpdateTrainingMax extends AppCompatActivity {
     private LiftModel lift;
 
     private LiftListViewModel model;
+
+    public static final String LOG_TAG = UpdateTrainingMax.class.getSimpleName();
 
 
 
@@ -93,7 +96,6 @@ public class UpdateTrainingMax extends AppCompatActivity {
 
             case R.id.action_save:
                 save();
-
                 return true;
         }
 
@@ -128,6 +130,7 @@ public class UpdateTrainingMax extends AppCompatActivity {
             double roundedMax = round(unroundedMax, lift.getRound_to());
             lift.setTraining_max(roundedMax);
             model.updateMax(lift);
+            Log.d(LOG_TAG, "Updated max is : " +lift.getTraining_max());
             Intent resultIntent = new Intent();
             setResult(Activity.RESULT_OK, resultIntent);
             finish();

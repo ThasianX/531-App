@@ -3,6 +3,7 @@ package com.example.a531app.settingsnavigation;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Se
 
     private List<LiftModel> liftModels;
     private final Context mContext;
+
+    public static final String LOG_TAG = SelectableAdapter.class.getSimpleName();
 
     private SelectableAdapterClickListener clickListener;
 
@@ -55,6 +58,7 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Se
     }
 
     public void changeLift(LiftModel lift, int position){
+        Log.d(LOG_TAG, "Changing lift");
         liftModels.set(position, lift);
         notifyItemChanged(position);
     }

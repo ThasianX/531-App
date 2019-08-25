@@ -10,7 +10,6 @@ import java.util.List;
 
 public class LiftListViewModel extends AndroidViewModel {
 
-    //    private final List<LiftModel> liftList;
     private LiftModelDao liftModelDao;
 
 
@@ -36,7 +35,7 @@ public class LiftListViewModel extends AndroidViewModel {
     }
 
     public void updateMax(LiftModel liftModel) {
-        liftModelDao.updatePr(liftModel.getPersonal_record(), liftModel.exercise_id);
+        liftModelDao.updateMax(liftModel.getTraining_max(), liftModel.exercise_id);
     }
 
     public void updateProgression(LiftModel liftModel) {

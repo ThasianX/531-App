@@ -12,6 +12,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,6 +69,8 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     public static final String CORE_CHECKED_KEY = "com.example.a531app.core";
     public static final String SECONDARY_CHECKED_KEY = "com.example.a531app.secondary";
     public static final String ASSISTANCE_CHECKED_KEY = "com.example.a531app.assistance";
+
+    public static final String LOG_TAG = SettingsFragment.class.getSimpleName();
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -329,6 +332,10 @@ public class SettingsFragment extends BaseFragment implements SelectableAdapter.
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==RC_EDIT_LIFT && resultCode==Activity.RESULT_OK){
+            Log.d(LOG_TAG, "Updating the adapter item now");
+
+            Log.d(LOG_TAG, "Updated max with new instance of viewmodel is : " + model.getLiftModels().get(editPosition).getTraining_max());
+
             adapter.changeLift(model.getLiftModels().get(editPosition), editPosition);
         }
         super.onActivityResult(requestCode, resultCode, data);

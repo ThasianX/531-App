@@ -43,25 +43,23 @@ public class CycleManager extends AppCompatActivity implements BaseFragment.OnFr
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavBarsetup();
 
+        bottomNavigationView.setSelectedItemId(R.id.action_cycle);
+
         SharedPreferences sharedPreferences = getSharedPreferences(SP_NAME, MODE_PRIVATE);
-        boolean firstLaunch = sharedPreferences.getBoolean(FIRST_LAUNCH_KEY+"ss", true);
+        boolean firstLaunch = sharedPreferences.getBoolean(FIRST_LAUNCH_KEY, true);
 
         program = new Program("Boring But Big Variation 1");
 
         if(firstLaunch){
-            AppDatabase.getDatabase(this);
             Intent intent = new Intent(this, SetupActivity.class);
             startActivityForResult(intent, RC_SETUP);
         }
 
-        bottomNavigationView.setSelectedItemId(R.id.action_cycle);
+
     }
 
     private void bottomNavBarsetup(){
 
-//
-//        transaction.replace(R.id.fragment_container, new CycleManagerFragment());
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CycleManagerFragment()).commit();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

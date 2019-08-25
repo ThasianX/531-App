@@ -65,8 +65,6 @@ public class CurrentCycleFragment extends BaseFragment implements WeeksAdapter.W
 
         setHasOptionsMenu(true);
 
-        final LiftListViewModel model = ViewModelProviders.of(getActivity()).get(LiftListViewModel.class);
-
         recyclerView = view.findViewById(R.id.rv_weeks);
         recyclerView.setHasFixedSize(true);
 
@@ -105,8 +103,7 @@ public class CurrentCycleFragment extends BaseFragment implements WeeksAdapter.W
                 //Need to delete all checkboxes but reinput the ones I need to keep. So prob get the values and keys I need before reset.
                 complete();
 
-                model.increaseLifts();
-                model.resetPrs();
+
 
 
                 //Add more later
@@ -187,6 +184,10 @@ public class CurrentCycleFragment extends BaseFragment implements WeeksAdapter.W
                 completeCycle.setVisibility(View.GONE);
                 startDate.setVisibility(View.GONE);
 
+                LiftListViewModel model = ViewModelProviders.of(getActivity()).get(LiftListViewModel.class);
+                model.resetPrs();
+                model.increaseLifts();
+
 
                 Toast.makeText(getActivity(), "Cycle completed. All training maxes increased by progression amount. PRs reset for new cycle.", Toast.LENGTH_LONG).show();
             }
@@ -242,6 +243,8 @@ public class CurrentCycleFragment extends BaseFragment implements WeeksAdapter.W
                 completeCycle.setVisibility(View.GONE);
                 startDate.setVisibility(View.GONE);
 
+                LiftListViewModel model = ViewModelProviders.of(getActivity()).get(LiftListViewModel.class);
+                model.resetPrs();
 
                 Toast.makeText(getActivity(), "Cycle reset. PRs reset for new cycle.", Toast.LENGTH_LONG).show();
             }
@@ -255,6 +258,8 @@ public class CurrentCycleFragment extends BaseFragment implements WeeksAdapter.W
         });
 
         builder.create().show();
+
+
     }
 
     private String getDate(){

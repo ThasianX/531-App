@@ -69,10 +69,6 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.setup);
-//
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        myToolbar.setTitle("Setup");
-//        setSupportActionBar(myToolbar);
 
         getSupportActionBar().setTitle("Setup");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -270,11 +266,7 @@ public class SetupActivity extends AppCompatActivity implements SelectableAdapte
             editor.putString(CurrentCycleFragment.CYCLE_DATE_KEY, getDate());
             editor.apply();
 
-//            Program program = new Program(programName);
-
-
             Intent intent = new Intent();
-//            intent.putExtra(CycleManager.PROGRAM_KEY, programName);
             setResult(Activity.RESULT_OK, intent);
             finish();
             return true;
